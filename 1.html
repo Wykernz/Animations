@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0d0703" />
+<title>Happy Anniversary ♥</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,500&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* ============================================================
+     DESIGN TOKENS
+     A warm, golden palette: one accent (sunflower gold), a small
+     neutral ramp, and botanical tokens so the bouquet never
+     hard-codes a colour.
+     ============================================================ */
+  :root {
+    color-scheme: dark;
+
+    --bg-deep: #0d0703;
+    --bg: #1a1005;
+    --text: #fdf6e8;
+    --text-muted: rgba(253, 246, 232, 0.62);
+    --border: rgba(255, 220, 150, 0.12);
+    --accent: #ffb020;
+
+    /* Sunflower petals — layered light → dark so a flat shape reads as depth. */
+    --petal-outer: #ffc61a;
+    --petal-inner: #f5a623;
+    --petal-deep:  #e08a00;
+
+    /* Seed head — dark brown with concentric rings. */
+    --seed-outer:     #4a2c12;
+    --seed-inner:     #6b4020;
+    --seed-core:      #2a1808;
+    --seed-highlight: #8a5a30;
+
+    /* Botanical + ribbon. */
+    --stem: #4a7c3f;
+    --leaf: #5a9448;
+    --ribbon: #f5e6c8;
+    --ribbon-shadow: #c9a878;
+
+    /* Motion — only three easings in the whole file. */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-back-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* 8pt spacing scale */
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #2a1c0a 0%, var(--bg) 42%, var(--bg-deep) 100%);
+    color: var(--text);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* A soft bloom behind everything so the dark never feels flat. */
+  .ambient-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(38% 30% at 50% 44%, rgba(255, 176, 32, 0.14) 0%, transparent 70%),
+      radial-gradient(60% 40% at 50% 100%, rgba(120, 80, 20, 0.35) 0%, transparent 70%);
+  }
+
+  .heart-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ============================================================
+     GATE — the sealed envelope
+     ============================================================ */
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+    padding: var(--space-6);
+    transition: opacity 560ms var(--ease-soft), visibility 560ms;
+  }
+
+  .gate.is-closed {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .envelope {
+    position: relative;
+    width: min(260px, 68vw);
+    aspect-ratio: 3 / 2;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    perspective: 900px;
+    animation: envelope-float 5s var(--ease-soft) infinite;
+    transition: transform 200ms var(--ease-out-expo);
+  }
+
+  .envelope:hover {
+    transform: translateY(-4px);
+  }
+
+  .envelope:active {
+    transform: scale(0.98);
+  }
+
+  .envelope:focus-visible {
+    outline: none;
+  }
+
+  .envelope:focus-visible .envelope__body {
+    box-shadow:
+      0 0 0 3px var(--bg-deep),
+      0 0 0 5px var(--accent),
+      0 24px 60px -20px rgba(255, 176, 32, 0.5);
+  }
+
+  @keyframes envelope-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+
+  .envelope__body {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: linear-gradient(160deg, #35260f 0%, #241705 55%, #1a0f03 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 24px 60px -22px rgba(255, 176, 32, 0.45),
+      0 6px 18px rgba(0, 0, 0, 0.55);
+    transition: box-shadow 200ms var(--ease-out-expo);
+  }
+
+  .envelope__flap {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, #463110 0%, #2c1e07 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 64%);
+    transform-origin: 50% 0%;
+    backface-visibility: hidden;
+    transition:
+      transform 720ms var(--ease-out-expo),
+      opacity 420ms var(--ease-soft) 260ms;
+  }
+
+  .envelope.is-open .envelope__flap {
+    transform: rotateX(-172deg);
+    opacity: 0;
+  }
+
+  .envelope__seal {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    top: 64%;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    border-radius: 50%;
+    font-size: 19px;
+    color: #fff3d6;
+    background: radial-gradient(circle at 32% 28%, #ffd47a 0%, #ffb020 62%, #c98000 100%);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.4),
+      0 6px 18px rgba(255, 176, 32, 0.55);
+    animation: seal-pulse 2.6s var(--ease-soft) infinite;
+    transition: transform 320ms var(--ease-back-out), opacity 320ms var(--ease-soft);
+  }
+
+  @keyframes seal-pulse {
+    0%, 100% { box-shadow: inset 0 1px 2px rgba(255,255,255,.4), 0 6px 18px rgba(255,176,32,.5); }
+    50%      { box-shadow: inset 0 1px 2px rgba(255,255,255,.4), 0 6px 30px rgba(255,176,32,.85); }
+  }
+
+  .envelope.is-open .envelope__seal {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+
+  .gate__hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ============================================================
+     LETTER
+     ============================================================ */
+  .letter {
+    position: relative;
+    z-index: 2;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-soft), visibility 700ms;
+  }
+
+  .letter.is-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .letter__inner {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: clamp(56px, 10vh, 104px) clamp(20px, 6vw, 40px) clamp(64px, 12vh, 120px);
+    text-align: center;
+  }
+
+  .eyebrow {
+    margin: 0 0 var(--space-4);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .headline {
+    margin: 0 0 var(--space-8);
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 7vw, 3.125rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ---- Bouquet ---- */
+  .bouquet {
+    width: min(360px, 82vw);
+    margin: 0 auto var(--space-12);
+  }
+
+  .bouquet__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 24px 64px rgba(255, 176, 32, 0.22));
+  }
+
+  /* Stems draw themselves like ink on paper. */
+  .stem {
+    fill: none;
+    stroke: var(--stem);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: var(--stem-length, 600);
+    stroke-dashoffset: var(--stem-length, 600);
+  }
+
+  .bouquet.is-blooming .stem {
+    animation: draw-stem 900ms var(--ease-out-expo) both;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes draw-stem {
+    from { stroke-dashoffset: var(--stem-length, 600); }
+    to   { stroke-dashoffset: 0; }
+  }
+
+  .leaf {
+    fill: var(--leaf);
+    transform-box: fill-box;
+    transform-origin: left center;
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  .bouquet.is-blooming .leaf {
+    animation: bloom-leaf 620ms var(--ease-back-out) both;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes bloom-leaf {
+    from { transform: scale(0) rotate(-10deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .ribbon {
+    opacity: 0;
+  }
+
+  .bouquet.is-blooming .ribbon {
+    animation: fade-in 620ms var(--ease-out-expo) 260ms both;
+  }
+
+  @keyframes fade-in {
+    to { opacity: 1; }
+  }
+
+  .ribbon__band,
+  .ribbon__loop {
+    fill: var(--ribbon);
+    stroke: var(--ribbon-shadow);
+    stroke-width: 0.8;
+  }
+
+  .ribbon__knot {
+    fill: var(--ribbon-shadow);
+  }
+
+  /* Petals unfurl from their base — transform-box keeps the origin
+     pinned to the petal's own geometry, not the SVG viewBox. */
+  .petal {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  .bouquet.is-blooming .petal {
+    animation: bloom-petal 760ms var(--ease-back-out) both;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes bloom-petal {
+    from { transform: scale(0.04) rotate(-14deg); opacity: 0; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  /* The seed head scales from its own centre, not its bottom. */
+  .sunflower-core .petal {
+    transform-origin: center;
+  }
+
+  /* ---- Message ---- */
+  .message {
+    display: grid;
+    gap: var(--space-6);
+    margin: 0 auto var(--space-12);
+    max-width: 46ch;
+    text-align: left;
+  }
+
+  .message p {
+    margin: 0;
+    font-size: clamp(1rem, 2.6vw, 1.0625rem);
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(253, 246, 232, 0.82);
+  }
+
+  .together {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-12);
+    padding: var(--space-4) var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(8px);
+  }
+
+  .together__label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .together__value {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+  }
+
+  .signature {
+    margin: 0 0 var(--space-12);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+
+  .signature em {
+    font-family: "Playfair Display", Georgia, serif;
+    font-style: italic;
+    font-size: 1.375rem;
+    color: var(--text);
+  }
+
+  .replay {
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(255, 176, 32, 0.08);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition:
+      background 180ms var(--ease-out-expo),
+      border-color 180ms var(--ease-out-expo),
+      transform 180ms var(--ease-out-expo);
+  }
+
+  .replay:hover {
+    background: rgba(255, 176, 32, 0.16);
+    border-color: rgba(255, 176, 32, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .replay:active {
+    transform: scale(0.98);
+  }
+
+  .replay:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ---- Staggered entrance ---- */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .letter.is-revealed [data-reveal] {
+    animation: reveal-up 720ms var(--ease-out-expo) both;
+    animation-delay: var(--reveal-delay, 0s);
+  }
+
+  @keyframes reveal-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     REDUCED MOTION — everything resolves instantly, nothing moves.
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+
+    .envelope { animation: none; }
+    .petal,
+    .leaf { transform: scale(1); opacity: 1; }
+    .stem { stroke-dashoffset: 0; }
+    .ribbon { opacity: 1; }
+    [data-reveal] { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 480px) {
+    .letter__inner { padding-top: 64px; }
+    .bouquet { width: min(300px, 78vw); }
+  }
+</style>
+</head>
+
+<body>
+  <canvas id="heartCanvas" class="heart-canvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- ── Gate: the sealed envelope ─────────────────────────── -->
+  <div class="gate" id="gate">
+    <button
+      class="envelope"
+      id="openButton"
+      type="button"
+      aria-label="Open your anniversary surprise"
+    >
+      <span class="envelope__body" aria-hidden="true"></span>
+      <span class="envelope__flap" aria-hidden="true"></span>
+      <span class="envelope__seal" aria-hidden="true">♥</span>
+    </button>
+    <p class="gate__hint">A little something I made for you</p>
+  </div>
+
+  <!-- ── The letter ────────────────────────────────────────── -->
+  <main class="letter" id="letter" aria-hidden="true">
+    <div class="letter__inner">
+      <p class="eyebrow" data-reveal>Happy Anniversary</p>
+
+      <h1 class="headline" data-reveal>
+        To the one who feels like <em>sunshine</em>
+      </h1>
+
+      <div class="bouquet" id="bouquet" data-reveal></div>
+
+      <div class="message">
+        <p data-reveal>
+          I don't remember the exact moment it happened. Somewhere between a
+          conversation that ran far too late and a silence that felt completely
+          comfortable, you stopped being someone I liked and became the person I
+          belong to.
+        </p>
+        <p data-reveal>
+          Thank you for the patience, the terrible inside jokes, and the way you
+          send me things that remind you of me. Thank you for making an ordinary
+          Tuesday feel like something worth showing up for.
+        </p>
+        <p data-reveal>
+          If I had to do all of it again, I'd still choose you — I'd just find
+          you faster.
+        </p>
+      </div>
+
+      <div class="together" data-reveal>
+        <span class="together__label">Us, so far</span>
+        <span class="together__value" id="togetherValue">—</span>
+      </div>
+
+      <p class="signature" data-reveal>
+        Always yours,<br />
+        <em>— Your Name</em>
+      </p>
+
+      <button class="replay" id="replayButton" type="button" data-reveal>
+        Play it again
+      </button>
+    </div>
+  </main>
+
+<script>
+(() => {
+  "use strict";
+
+  /* ==========================================================
+     1. Shared helpers
+     ========================================================== */
+
+  const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  /** Resolves immediately when the visitor asked for reduced motion. */
+  const wait = (milliseconds) =>
+    new Promise((resolve) =>
+      window.setTimeout(resolve, prefersReducedMotion ? 0 : milliseconds)
+    );
+
+  function createSvgElement(tagName, attributes = {}) {
+    const element = document.createElementNS(SVG_NAMESPACE, tagName);
+    for (const [name, value] of Object.entries(attributes)) {
+      element.setAttribute(name, value);
+    }
+    return element;
+  }
+
+  /* ==========================================================
+     2. The sunflower bouquet
+     Everything below is generated so the flowers can be
+     re-arranged by editing data, never markup.
+     ========================================================== */
+
+  const BOUQUET_WIDTH = 420;
+  const BOUQUET_HEIGHT = 560;
+
+  /** Where every stem is gathered and tied. */
+  const STEM_ANCHOR = { x: 210, y: 522 };
+
+  /** Bouquet centre — used to stagger the bloom from the inside out. */
+  const BOUQUET_CENTRE = { x: 210, y: 205 };
+
+  const SUNFLOWER_LAYOUT = [
+    // Back row — the crown of the dome.
+    { x: 148, y: 130, scale: 0.72 },
+    { x: 272, y: 130, scale: 0.72 },
+    // Middle row — the body.
+    { x: 100, y: 225, scale: 0.9 },
+    { x: 210, y: 195, scale: 1.0 },
+    { x: 320, y: 225, scale: 0.9 },
+    // Front row — closest to the viewer.
+    { x: 162, y: 305, scale: 0.8 },
+    { x: 258, y: 305, scale: 0.8 },
+  ];
+
+  const LEAF_LAYOUT = [
+    { x: 70, y: 250, angle: 152, scale: 1.0 },
+    { x: 350, y: 244, angle: 28, scale: 1.0 },
+    { x: 118, y: 332, angle: 140, scale: 0.88 },
+    { x: 302, y: 326, angle: 40, scale: 0.88 },
+  ];
+
+  /**
+   * A sunflower petal: narrow at the base, widest just past the middle,
+   * gently pointed at the tip. Drawn from (0,0) upward so the petals
+   * can be rotated around the flower's centre.
+   */
+  const SUNFLOWER_PETAL_PATH =
+    "M 0 0 C -9 -14 -13 -40 0 -58 C 13 -40 9 -14 0 0 Z";
+
+  /** A broad, pointed leaf — closer to a real sunflower leaf. */
+  const LEAF_PATH =
+    "M 0 0 C 8 -22 36 -30 52 -14 C 40 6 12 12 0 0 Z";
+
+  /**
+   * Two rings of petals. The inner ring is shorter, rotated slightly,
+   * and a shade darker — that's what gives the flower depth.
+   */
+  const SUNFLOWER_LAYERS = [
+    {
+      petalCount: 14,
+      groupScale: 1.0,
+      rotationOffset: 0,
+      colorToken: "--petal-outer",
+      delayStep: 0,
+    },
+    {
+      petalCount: 12,
+      groupScale: 0.78,
+      rotationOffset: 12,
+      colorToken: "--petal-inner",
+      delayStep: 0.05,
+    },
+  ];
+
+  function buildSunflower({ x, y, scale }) {
+    // Flowers closer to the bouquet centre bloom first, so the
+    // arrangement opens outward like a real bunch.
+    const distanceFromCentre = Math.hypot(
+      x - BOUQUET_CENTRE.x,
+      y - BOUQUET_CENTRE.y
+    );
+    const flowerDelay = distanceFromCentre / 700;
+
+    const flower = createSvgElement("g", {
+      transform: `translate(${x} ${y}) scale(${scale})`,
+    });
+
+    /* ---- Petals ---- */
+    SUNFLOWER_LAYERS.forEach((layer) => {
+      const layerGroup = createSvgElement("g", {
+        transform: `scale(${layer.groupScale})`,
+      });
+      layerGroup.style.fill = `var(${layer.colorToken})`;
+
+      for (let petalIndex = 0; petalIndex < layer.petalCount; petalIndex += 1) {
+        const angle = (360 / layer.petalCount) * petalIndex + layer.rotationOffset;
+
+        const petalGroup = createSvgElement("g", {
+          transform: `rotate(${angle})`,
+        });
+        const petal = createSvgElement("path", {
+          class: "petal",
+          d: SUNFLOWER_PETAL_PATH,
+        });
+
+        const petalDelay =
+          flowerDelay + layer.delayStep + petalIndex * 0.012;
+        petal.style.setProperty("--delay", `${petalDelay.toFixed(3)}s`);
+
+        petalGroup.appendChild(petal);
+        layerGroup.appendChild(petalGroup);
+      }
+
+      flower.appendChild(layerGroup);
+    });
+
+    /* ---- Seed head ----
+       Layered concentric circles: dark outer ring, warmer inner,
+       deep core, and a small off-centre highlight — enough to read
+       as a textured disc without any filters or gradients. */
+    const coreGroup = createSvgElement("g", { class: "sunflower-core" });
+
+    const coreRings = [
+      { radius: 27, colorToken: "--seed-outer", offset: 0.30 },
+      { radius: 19, colorToken: "--seed-inner", offset: 0.36 },
+      { radius: 11, colorToken: "--seed-core",  offset: 0.42 },
+    ];
+
+    coreRings.forEach(({ radius, colorToken, offset }) => {
+      const ring = createSvgElement("circle", {
+        class: "petal",
+        cx: 0,
+        cy: 0,
+        r: radius,
+      });
+      ring.style.fill = `var(${colorToken})`;
+      ring.style.setProperty(
+        "--delay",
+        `${(flowerDelay + offset).toFixed(3)}s`
+      );
+      coreGroup.appendChild(ring);
+    });
+
+    // A soft highlight on the upper-left of the seed head — reads as light.
+    const highlight = createSvgElement("circle", {
+      class: "petal",
+      cx: -7,
+      cy: -7,
+      r: 4,
+    });
+    highlight.style.fill = "var(--seed-highlight)";
+    highlight.style.setProperty(
+      "--delay",
+      `${(flowerDelay + 0.48).toFixed(3)}s`
+    );
+    coreGroup.appendChild(highlight);
+
+    flower.appendChild(coreGroup);
+
+    return flower;
+  }
+
+  function buildRibbon() {
+    const ribbon = createSvgElement("g", { class: "ribbon" });
+
+    // The band that hides where the stems cross over.
+    ribbon.appendChild(
+      createSvgElement("path", {
+        class: "ribbon__band",
+        d: "M 158 420 Q 210 410 262 420 L 262 464 Q 210 474 158 464 Z",
+      })
+    );
+
+    ribbon.appendChild(
+      createSvgElement("path", {
+        class: "ribbon__loop",
+        d: "M 210 442 C 186 412 146 420 154 444 C 161 467 194 460 210 442 Z",
+      })
+    );
+    ribbon.appendChild(
+      createSvgElement("path", {
+        class: "ribbon__loop",
+        d: "M 210 442 C 234 412 274 420 266 444 C 259 467 226 460 210 442 Z",
+      })
+    );
+    ribbon.appendChild(
+      createSvgElement("ellipse", {
+        class: "ribbon__knot",
+        cx: 210,
+        cy: 442,
+        rx: 9,
+        ry: 8,
+      })
+    );
+
+    return ribbon;
+  }
+
+  function buildBouquet(container) {
+    const svg = createSvgElement("svg", {
+      class: "bouquet__svg",
+      viewBox: `0 0 ${BOUQUET_WIDTH} ${BOUQUET_HEIGHT}`,
+      "aria-hidden": "true",
+      focusable: "false",
+    });
+
+    // Stems first — everything else layers on top of them.
+    const stemElements = SUNFLOWER_LAYOUT.map((flower, index) => {
+      const controlPoint = {
+        x: (STEM_ANCHOR.x + flower.x) / 2 + (flower.x - STEM_ANCHOR.x) * 0.16,
+        y: (STEM_ANCHOR.y + flower.y) / 2,
+      };
+
+      const stem = createSvgElement("path", {
+        class: "stem",
+        d:
+          `M ${STEM_ANCHOR.x} ${STEM_ANCHOR.y} ` +
+          `Q ${controlPoint.x} ${controlPoint.y} ${flower.x} ${flower.y}`,
+      });
+      stem.style.setProperty("--delay", `${(index * 0.03).toFixed(2)}s`);
+
+      svg.appendChild(stem);
+      return stem;
+    });
+
+    LEAF_LAYOUT.forEach((leaf, index) => {
+      const group = createSvgElement("g", {
+        transform:
+          `translate(${leaf.x} ${leaf.y}) ` +
+          `rotate(${leaf.angle}) scale(${leaf.scale})`,
+      });
+
+      const path = createSvgElement("path", { class: "leaf", d: LEAF_PATH });
+      path.style.setProperty("--delay", `${(0.24 + index * 0.05).toFixed(2)}s`);
+
+      group.appendChild(path);
+      svg.appendChild(group);
+    });
+
+    svg.appendChild(buildRibbon());
+
+    SUNFLOWER_LAYOUT.forEach((flower) =>
+      svg.appendChild(buildSunflower(flower))
+    );
+
+    container.appendChild(svg);
+
+    // Path length is only measurable once the SVG is in the document —
+    // that number drives the stroke-dasharray "drawing" animation.
+    stemElements.forEach((stem) => {
+      const length = stem.getTotalLength();
+      stem.style.setProperty("--stem-length", length.toFixed(1));
+    });
+
+    return svg;
+  }
+
+  /* ==========================================================
+     3. The heart field (canvas)
+     Ambient hearts drift upward forever; tapping adds a burst.
+     ========================================================== */
+
+  function createHeartField(canvas) {
+    const context = canvas.getContext("2d");
+    const HEART_COLORS = [
+      "#ffb020", // sunflower gold
+      "#ffd47a", // pale gold
+      "#ff8f5c", // warm amber
+      "#ff5c8a", // romantic pink
+      "#ffe3b0", // cream
+    ];
+
+    const ambientHearts = [];
+    const burstHearts = [];
+
+    let viewportWidth = 0;
+    let viewportHeight = 0;
+    let previousTimestamp = 0;
+    let frameId = null;
+
+    function pickColor() {
+      return HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)];
+    }
+
+    function createAmbientHeart(isInitial) {
+      return {
+        x: Math.random() * viewportWidth,
+        y: isInitial
+          ? Math.random() * viewportHeight
+          : viewportHeight + 40 + Math.random() * 80,
+        size: 5 + Math.random() * 14,
+        speed: 0.18 + Math.random() * 0.5,
+        drift: (Math.random() - 0.5) * 0.3,
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: 0.0007 + Math.random() * 0.0014,
+        rotation: (Math.random() - 0.5) * 0.7,
+        rotationSpeed: (Math.random() - 0.5) * 0.0006,
+        opacity: 0.12 + Math.random() * 0.4,
+        color: pickColor(),
+      };
+    }
+
+    function traceHeart(size) {
+      context.beginPath();
+      context.moveTo(0, -size * 0.2);
+      context.bezierCurveTo(
+        0, -size * 0.75,
+        -size * 0.75, -size * 0.75,
+        -size * 0.75, -size * 0.2
+      );
+      context.bezierCurveTo(
+        -size * 0.75, size * 0.28,
+        -size * 0.18, size * 0.58,
+        0, size * 0.88
+      );
+      context.bezierCurveTo(
+        size * 0.18, size * 0.58,
+        size * 0.75, size * 0.28,
+        size * 0.75, -size * 0.2
+      );
+      context.bezierCurveTo(
+        size * 0.75, -size * 0.75,
+        0, -size * 0.75,
+        0, -size * 0.2
+      );
+      context.closePath();
+    }
+
+    function drawHeart(heart) {
+      context.save();
+      context.translate(heart.x, heart.y);
+      context.rotate(heart.rotation);
+      context.globalAlpha = heart.opacity;
+      context.fillStyle = heart.color;
+      traceHeart(heart.size);
+      context.fill();
+      context.restore();
+    }
+
+    function resize() {
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      viewportWidth = window.innerWidth;
+      viewportHeight = window.innerHeight;
+      canvas.width = Math.floor(viewportWidth * devicePixelRatio);
+      canvas.height = Math.floor(viewportHeight * devicePixelRatio);
+      canvas.style.width = `${viewportWidth}px`;
+      canvas.style.height = `${viewportHeight}px`;
+      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    }
+
+    function step(timestamp) {
+      const delta = previousTimestamp ? timestamp - previousTimestamp : 16;
+      previousTimestamp = timestamp;
+
+      context.clearRect(0, 0, viewportWidth, viewportHeight);
+
+      // Ambient — always running.
+      for (let index = ambientHearts.length - 1; index >= 0; index -= 1) {
+        const heart = ambientHearts[index];
+        heart.y -= heart.speed * delta * 0.06;
+        heart.swayPhase += heart.swaySpeed * delta;
+        heart.x += Math.sin(heart.swayPhase) * 0.25 + heart.drift * 0.02;
+        heart.rotation += heart.rotationSpeed * delta;
+
+        if (heart.y < -60) {
+          ambientHearts.splice(index, 1);
+          continue;
+        }
+        drawHeart(heart);
+      }
+
+      // Burst — hearts fade in place, then disappear.
+      for (let index = burstHearts.length - 1; index >= 0; index -= 1) {
+        const heart = burstHearts[index];
+        heart.x += heart.velocityX * delta * 0.06;
+        heart.y += heart.velocityY * delta * 0.06;
+        heart.velocityY += 0.012 * delta * 0.06; // gentle gravity
+        heart.rotation += heart.rotationSpeed * delta;
+        heart.opacity -= 0.0006 * delta;
+
+        if (heart.opacity <= 0) {
+          burstHearts.splice(index, 1);
+          continue;
+        }
+        drawHeart(heart);
+      }
+
+      // Spawn replacements so the field never empties.
+      const targetAmbientCount = Math.min(
+        36,
+        Math.round((viewportWidth * viewportHeight) / 26000)
+      );
+      while (ambientHearts.length < targetAmbientCount) {
+        ambientHearts.push(createAmbientHeart(false));
+      }
+
+      frameId = window.requestAnimationFrame(step);
+    }
+
+    function burst(clientX, clientY) {
+      const count = 12 + Math.floor(Math.random() * 6);
+      for (let index = 0; index < count; index += 1) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.6 + Math.random() * 3.4;
+        burstHearts.push({
+          x: clientX,
+          y: clientY,
+          size: 6 + Math.random() * 12,
+          velocityX: Math.cos(angle) * speed,
+          velocityY: Math.sin(angle) * speed - 1.2,
+          rotation: (Math.random() - 0.5) * 0.8,
+          rotationSpeed: (Math.random() - 0.5) * 0.004,
+          opacity: 0.9,
+          color: pickColor(),
+        });
+      }
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (!prefersReducedMotion) {
+      frameId = window.requestAnimationFrame(step);
+    }
+
+    return { burst };
+  }
+
+  /* ==========================================================
+     4. "Us, so far" — a live counter from an anniversary date
+     ========================================================== */
+
+  function formatTogetherTime(startDate) {
+    const now = new Date();
+    const elapsedMilliseconds = Math.max(0, now - startDate);
+    const totalDays = Math.floor(elapsedMilliseconds / 86_400_000);
+    const years = Math.floor(totalDays / 365);
+    const remainingDaysAfterYears = totalDays - years * 365;
+    const months = Math.floor(remainingDaysAfterYears / 30);
+    const days = remainingDaysAfterYears - months * 30;
+    const hours = Math.floor(elapsedMilliseconds / 3_600_000) % 24;
+    const minutes = Math.floor(elapsedMilliseconds / 60_000) % 60;
+
+    const parts = [];
+    if (years > 0) parts.push(`${years} ${years === 1 ? "year" : "years"}`);
+    if (months > 0) parts.push(`${months} ${months === 1 ? "month" : "months"}`);
+    if (days > 0) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
+    parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
+    parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
+
+    if (parts.length > 3) {
+      return `${parts.slice(0, 2).join(", ")} — still counting`;
+    }
+    return parts.join(", ");
+  }
+
+  function startTogetherCounter(element, startDate) {
+    element.textContent = formatTogetherTime(startDate);
+    const intervalId = window.setInterval(
+      () => {
+        element.textContent = formatTogetherTime(startDate);
+      },
+      30_000
+    );
+    return () => window.clearInterval(intervalId);
+  }
+
+  /* ==========================================================
+     5. Orchestration
+     ========================================================== */
+
+  const gate = document.getElementById("gate");
+  const openButton = document.getElementById("openButton");
+  const letter = document.getElementById("letter");
+  const bouquetContainer = document.getElementById("bouquet");
+  const togetherValue = document.getElementById("togetherValue");
+  const replayButton = document.getElementById("replayButton");
+
+  const heartField = createHeartField(
+    document.getElementById("heartCanvas")
+  );
+
+  // ✏️ Set your real anniversary date here.
+  const ANNIVERSARY_DATE = new Date("2020-02-14T00:00:00");
+
+  let stopCounter = null;
+  let isOpening = false;
+
+  function applyRevealDelays() {
+    const revealedItems = letter.querySelectorAll("[data-reveal]");
+    revealedItems.forEach((element, index) => {
+      element.style.setProperty(
+        "--reveal-delay",
+        `${(index * 0.045).toFixed(3)}s`
+      );
+    });
+  }
+
+  function playBouquetBloom() {
+    const svg = bouquetContainer.querySelector(".bouquet__svg");
+    if (!svg) return;
+    // Force a reflow so the animation class re-triggers on replay.
+    svg.getBoundingClientRect();
+    bouquetContainer.classList.remove("is-blooming");
+    bouquetContainer.classList.add("is-blooming");
+  }
+
+  async function openLetter() {
+    if (isOpening) return;
+    isOpening = true;
+
+    openButton.classList.add("is-open");
+    openButton.setAttribute("aria-expanded", "true");
+
+    await wait(420);
+
+    gate.classList.add("is-closed");
+    gate.setAttribute("aria-hidden", "true");
+
+    // Build the bouquet lazily so the first paint stays instant.
+    if (!bouquetContainer.querySelector(".bouquet__svg")) {
+      buildBouquet(bouquetContainer);
+    }
+
+    letter.classList.add("is-visible");
+    letter.setAttribute("aria-hidden", "false");
+    applyRevealDelays();
+
+    await wait(60);
+
+    // The bouquet blooms as a sibling of the reveal, so it doesn't
+    // compete with the heading's entrance.
+    playBouquetBloom();
+    letter.classList.add("is-revealed");
+
+    stopCounter = startTogetherCounter(togetherValue, ANNIVERSARY_DATE);
+
+    // Move focus into the letter for keyboard + screen-reader users.
+    await wait(300);
+    const firstInteractive = letter.querySelector("button");
+    if (firstInteractive) firstInteractive.focus({ preventScroll: true });
+
+    isOpening = false;
+  }
+
+  openButton.addEventListener("click", openLetter);
+
+  // ⏎ / Space naturally activate <button>, so no extra keyboard handling.
+
+  // Tap / click anywhere on the letter sends up a burst of hearts.
+  letter.addEventListener("pointerdown", (event) => {
+    // Ignore clicks that land on interactive elements.
+    if (event.target.closest("button")) return;
+    heartField.burst(event.clientX, event.clientY);
+  });
+
+  replayButton.addEventListener("click", async () => {
+    replayButton.blur();
+
+    letter.classList.remove("is-revealed");
+    bouquetContainer.classList.remove("is-blooming");
+    letter.classList.remove("is-visible");
+    letter.setAttribute("aria-hidden", "true");
+
+    await wait(400);
+
+    if (stopCounter) {
+      stopCounter();
+      stopCounter = null;
+    }
+
+    // Reset the envelope so the seal re-forms.
+    openButton.classList.remove("is-open");
+    openButton.setAttribute("aria-expanded", "false");
+
+    gate.classList.remove("is-closed");
+    gate.removeAttribute("aria-hidden");
+
+    isOpening = false;
+  });
+})();
+</script>
+</body>
+</html>
