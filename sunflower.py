@@ -154,7 +154,7 @@ class Sunflower:
             c.create_oval(px-r, py-r, px+r, py+r, fill="#ffe49b", outline="", tags="animation")
 
         # A quiet dedication in the sunset sky.
-        c.create_text(CX, 30, text="FOR MY SWEETHEART", fill="#ffe8b0",
+        c.create_text(CX, 30, text="FOR MY SWEETHEA", fill="#ffe8b0",
                       font=("Georgia", 12, "bold"), tags="animation")
         c.create_rectangle(0, 610, W, H, fill="#1d342f", outline="", tags="animation")
         c.create_line(90, 610, W-90, 610, fill="#d49a51", width=2, tags="animation")
