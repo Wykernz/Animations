@@ -423,9 +423,9 @@ def build_message(name: str) -> list[str]:
     return [
         greeting,
         "",
-        "The stars came out tonight —",
-        "but not one of them",
-        "shines half as bright as you.",
+        "Sleep well Sweet Dreams —",
+        "Pray always Ayaw na Papiraw turog na dayun",
+        "I love You always and Forever Babi Mwawawaw.",
     ]
 
 
